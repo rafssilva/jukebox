@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+  <h:head>
+    <title>Jukebox</title>
+    <link href="./css/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="./css/table-styles.css" rel="stylesheet" type="text/css"/>
+  </h:head> 
+
+  <h:body>
+
+    <h1 class="title">Jukebox</h1>
+
+    <div align="center">
+      <br/>
+      <fieldset>
+      
+        <h:form>
+        
+          <h:panelGrid id="cadastro" columns="3" styleClass="formTable">
+            <h:outputLabel for="nome" value="Nome da Música:"/>
+            <h:inputText id="nome" value="#{musicaView.musica.nome}" required="true" requiredMessage="É necessário informar o nome"/>
+            <h:message for="nome"/>
+            <h:outputLabel for="artista" value="Artista / Banda:"/>
+            <h:inputText id="artista" value="#{musicaView.musica.artista}"/>
+            <h:message for="artista"/>
+            <h:outputLabel for="genero" value="Gênero:"/>
+            <h:inputText id="genero" value="#{musicaView.musica.genero}"/>
+            <h:message for="genero"/>
+            <h:outputLabel for="ano" value="Ano de Lançamento:"/>
+            <h:inputText id="ano" value="#{musicaView.musica.anoLancamento}" converterMessage="O ano deve ser um número inteiro"/>
+            <h:message for="ano"/>
+          </h:panelGrid>
+          
+          <h:commandButton value="Cadastrar" action="#{musicaView.cadastrarMusica}"/>
+          
+        </h:form>
+        
+        <br/>
+          
+        <h:form>
+        
+          <h:dataTable id="musicas" var="musica" value="#{musicaView.musicas}" border="1" styleClass="mainTable" captionClass="caption1"
+                       headerClass="heading" rowClasses="even, odd" rendered="#{not empty musicaView.musicas}">
+
+            <f:facet name="caption">
+              <h:outputText value="Músicas Registradas"/>
+            </f:facet>
+            
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="ID"/>
+              </f:facet>
+              <h:outputText value="#{musica.ID}"/>
+            </h:column>
+            
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="Música"/>
+              </f:facet>
+              <h:outputText value="#{musica.nome}" rendered="#{not musica.editando}"/>
+              <h:inputText id="nomeDataTable" value="#{musica.nome}" rendered="#{musica.editando}" required="true"
+                           requiredMessage="É necessário informar o nome"/>
+              <h:message for="nomeDataTable" styleClass="error"/>
+            </h:column>
+            
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="Artista"/>
+              </f:facet>
+              <h:outputText value="#{musica.artista}" rendered="#{not musica.editando}"/>
+              <h:inputText value="#{musica.artista}" rendered="#{musica.editando}"/>
+            </h:column>
+            
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="Gênero"/>
+              </f:facet>
+              <h:outputText value="#{musica.genero}" rendered="#{not musica.editando}"/>
+              <h:inputText value="#{musica.genero}" rendered="#{musica.editando}"/>
+            </h:column>
+            
+            <h:column>
+              <f:facet name="header">
+                <h:outputText value="Ano"/>
+              </f:facet>
+              <h:outputText value="#{musica.anoLancamento}" rendered="#{not musica.editando}"/>
+              <h:inputText id="anoDataTable" value="#{musica.anoLancamento}" rendered="#{musica.editando}"
+                           converterMessage="O ano deve ser um número inteiro"/>
+              <h:message for="anoDataTable" styleClass="error"/>
+            </h:column>
+            
+            <h:column>
+              <h:commandButton value="#{musica.editando ? 'Salvar Alterações' : 'Editar'}" action="#{musicaView.editarMusica(musica)}"
+                               rendered="#{musica.editando or musicaView.renderizarEditar}"/>
+            </h:column>
+            
+            <h:column>
+              <h:commandButton value="Excluir" action="#{musicaView.excluirMusica(musica)}"
+                onclick="return confirm('Tem certeza que deseja excluir a música de ID nº: #{musica.ID} - #{musica.nome}?')" immediate="true"/>
+            </h:column>
+            
+          </h:dataTable>
+          
+        </h:form>
+        
+      </fieldset>
+    </div>
+  </h:body>
+</html>
